@@ -8,7 +8,7 @@ export default class StatusController {
     
     static async databaseStatusCheck (_:Request, res:Response){
         try {
-            const tes = await pool.query("SELECT now()");
+            const tes = await pool.query("SELECT * FROM customer");
             return res.status(200).json(tes)
         } catch (error) {
             console.error(error);
