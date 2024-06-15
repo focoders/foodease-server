@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import pool from "../../../database/pool";
+import pool from "@/database/pool";
 
 export default class StatusController {
     static nodeServerStatusCheck (_:Request, res:Response){
