@@ -4,4 +4,6 @@ dist/
 
 certs/
 
+mydb.sql
+
 tsconfig.build.json
