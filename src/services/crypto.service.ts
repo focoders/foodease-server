@@ -12,12 +12,14 @@ export async function hashPassword(plainPassword: string): Promise<string> {
     });
 }
 
-export async function comparePassword(plainPassword: string, hashedPassword: string){
-    await bcrypt.compare(plainPassword, hashedPassword, function(err: any, res:boolean){
-        if(err){
-            console.error(err);
-            return err
-        }
-        return res;
-    })
+export async function comparePassword(plainPassword: string, hashedPassword: string): Promise<boolean>{
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(plainPassword, hashedPassword, (err:any, result:any) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
 }
