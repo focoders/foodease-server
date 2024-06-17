@@ -1,13 +1,13 @@
 /** Types generated for queries found in "src/api/v1/user/user.sql" */
 import { PreparedQuery } from '@pgtyped/runtime';
 
-/** 'FindUserByEmail' parameters type */
-export interface IFindUserByEmailParams {
+/** 'FindCustomerByEmail' parameters type */
+export interface IFindCustomerByEmailParams {
   email?: string | null | void;
 }
 
-/** 'FindUserByEmail' return type */
-export interface IFindUserByEmailResult {
+/** 'FindCustomerByEmail' return type */
+export interface IFindCustomerByEmailResult {
   active_address_id: string | null;
   created_at: Date;
   customer_password: string;
@@ -18,13 +18,13 @@ export interface IFindUserByEmailResult {
   updated_at: Date;
 }
 
-/** 'FindUserByEmail' query type */
-export interface IFindUserByEmailQuery {
-  params: IFindUserByEmailParams;
-  result: IFindUserByEmailResult;
+/** 'FindCustomerByEmail' query type */
+export interface IFindCustomerByEmailQuery {
+  params: IFindCustomerByEmailParams;
+  result: IFindCustomerByEmailResult;
 }
 
-const findUserByEmailIR: any = {"usedParamSet":{"email":true},"params":[{"name":"email","required":false,"transform":{"type":"scalar"},"locs":[{"a":37,"b":42}]}],"statement":"SELECT * FROM customer WHERE email = :email"};
+const findCustomerByEmailIR: any = {"usedParamSet":{"email":true},"params":[{"name":"email","required":false,"transform":{"type":"scalar"},"locs":[{"a":37,"b":42}]}],"statement":"SELECT * FROM customer WHERE email = :email"};
 
 /**
  * Query generated from SQL:
@@ -32,7 +32,41 @@ const findUserByEmailIR: any = {"usedParamSet":{"email":true},"params":[{"name":
  * SELECT * FROM customer WHERE email = :email
  * ```
  */
-export const findUserByEmail = new PreparedQuery<IFindUserByEmailParams,IFindUserByEmailResult>(findUserByEmailIR);
+export const findCustomerByEmail = new PreparedQuery<IFindCustomerByEmailParams,IFindCustomerByEmailResult>(findCustomerByEmailIR);
+
+
+/** 'FindCustomerById' parameters type */
+export interface IFindCustomerByIdParams {
+  id?: string | null | void;
+}
+
+/** 'FindCustomerById' return type */
+export interface IFindCustomerByIdResult {
+  active_address_id: string | null;
+  created_at: Date;
+  customer_password: string;
+  email: string;
+  first_name: string;
+  id: string;
+  last_name: string;
+  updated_at: Date;
+}
+
+/** 'FindCustomerById' query type */
+export interface IFindCustomerByIdQuery {
+  params: IFindCustomerByIdParams;
+  result: IFindCustomerByIdResult;
+}
+
+const findCustomerByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":34,"b":36}]}],"statement":"SELECT * FROM customer WHERE id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT * FROM customer WHERE id = :id
+ * ```
+ */
+export const findCustomerById = new PreparedQuery<IFindCustomerByIdParams,IFindCustomerByIdResult>(findCustomerByIdIR);
 
 
 /** 'RegisterNewCustomer' parameters type */

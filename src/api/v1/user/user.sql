@@ -1,7 +1,12 @@
-/* @name findUserByEmail */
+/* @name findCustomerByEmail */
 
 SELECT * FROM customer WHERE email = :email;
 
+/*
+ @name findCustomerById 
+*/
+
+SELECT * FROM customer WHERE id = :id;
 
 /*
     @name registerNewCustomer 
