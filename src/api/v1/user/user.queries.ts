@@ -103,3 +103,51 @@ const registerNewCustomerIR: any = {"usedParamSet":{"customer":true},"params":[{
 export const registerNewCustomer = new PreparedQuery<IRegisterNewCustomerParams,IRegisterNewCustomerResult>(registerNewCustomerIR);
 
 
+/** 'GetCustomerWithAddress' parameters type */
+export interface IGetCustomerWithAddressParams {
+  id?: string | null | void;
+}
+
+/** 'GetCustomerWithAddress' return type */
+export interface IGetCustomerWithAddressResult {
+  address_coordinates: unknown;
+  address_created_at: Date;
+  address_id: string;
+  address_street: string;
+  address_updated_at: Date;
+  created_at: Date;
+  email: string;
+  first_name: string;
+  last_name: string;
+  updated_at: Date;
+}
+
+/** 'GetCustomerWithAddress' query type */
+export interface IGetCustomerWithAddressQuery {
+  params: IGetCustomerWithAddressParams;
+  result: IGetCustomerWithAddressResult;
+}
+
+const getCustomerWithAddressIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":358,"b":360}]}],"statement":"SELECT \n    c.email,\n    c.first_name,\n    c.last_name,\n    a.id as \"address_id\",\n    a.street as \"address_street\",\n    a.coordinates as \"address_coordinates\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.created_at,\n    c.updated_at\nFROM customer c LEFT JOIN address a ON a.id = c.active_address_id\nWHERE c.id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT 
+ *     c.email,
+ *     c.first_name,
+ *     c.last_name,
+ *     a.id as "address_id",
+ *     a.street as "address_street",
+ *     a.coordinates as "address_coordinates",
+ *     a.created_at as "address_created_at",
+ *     a.updated_at as "address_updated_at",
+ *     c.created_at,
+ *     c.updated_at
+ * FROM customer c LEFT JOIN address a ON a.id = c.active_address_id
+ * WHERE c.id = :id
+ * ```
+ */
+export const getCustomerWithAddress = new PreparedQuery<IGetCustomerWithAddressParams,IGetCustomerWithAddressResult>(getCustomerWithAddressIR);
+
+
