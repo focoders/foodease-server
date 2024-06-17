@@ -3,6 +3,7 @@ import { body } from "express-validator";
 export function customerRegistrationValidation() {
   return [
     body("email")
+      .trim()
       .notEmpty()
       .withMessage("Email is required")
       .isEmail()
@@ -36,5 +37,19 @@ export function customerRegistrationValidation() {
           req.body.customer_password && value === req.body.customer_password
       )
       .withMessage("Password confirmation not match"),
+  ];
+}
+
+export function customerLoginValidation() {
+  return [
+    body("email")
+      .trim()
+      .notEmpty().withMessage("Email is required")
+      .isEmail().withMessage("Invalid email"),
+    body("customer_password")
+      .notEmpty().withMessage("Password is required")
+      .isLength({ min: 8, max: 127 }).withMessage(
+        "Password should be at least 8 characters long and maximum 127 characters"
+      ),
   ];
 }
