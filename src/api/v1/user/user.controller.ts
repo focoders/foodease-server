@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { findCustomerByEmail, findCustomerById, getCustomerWithAddress, registerNewCustomer } from "./user.queries";
+import { findCustomerByEmail, getCustomerWithAddress, registerNewCustomer } from "./user.queries";
 import pool from "@/database/pool";
 import { ParamsDictionary } from "express-serve-static-core";
 import { apiResponse } from "@/utils/response";
@@ -74,6 +74,26 @@ export default class UserController {
 
     } catch (error) {
       console.error(error);
+      return res.status(500).json(
+        apiResponse(null, false, "Internal Server Error")
+      )
+    }
+  }
+
+  static async getCurentCustomer(req: Request, res: Response){
+    try {
+      const currentCustomer = await getCustomerWithAddress.run({ id: req.body.payload.data }, pool)
+
+      if(!currentCustomer || currentCustomer.length === 0){
+        return res.status(404).json(
+          apiResponse(null, false, "Customer not found")
+        )
+      }
+      return res.status(200).json(
+        apiResponse(convertCustomerResponse(currentCustomer[0]), true, "Get Current User Success")
+      )
+    } catch (error) {
+      console.error(error)
       return res.status(500).json(
         apiResponse(null, false, "Internal Server Error")
       )
