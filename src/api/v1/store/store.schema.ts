@@ -5,6 +5,7 @@ export type StoreRegisterSchema = {
     store_name: string;
     description: string;
     store_password: string;
+    store_password_confirm: string;
     free_time: string;
     address: {
         street: string;
