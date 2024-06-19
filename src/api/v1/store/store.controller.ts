@@ -25,6 +25,8 @@ export default class StoreController {
           .status(400)
           .json(apiResponse(null, false, "Store already registered"));
       }
+      
+      pool.query("BEGIN");
 
       const { street, village, sub_district, city, province } =
         req.body.address;
@@ -69,6 +71,8 @@ export default class StoreController {
         },
         pool
       );
+
+      pool.query("COMMIT");
 
       const completeDataStoreRegistered  = await findStoreById.run({ id: newStore[0].id }, pool)
 
