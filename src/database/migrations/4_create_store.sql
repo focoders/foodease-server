@@ -9,7 +9,7 @@ CREATE TABLE store (
     description TEXT NOT NULL,
     store_password TEXT NOT NULL,
     address_id UUID NOT NULL,
-    free_time TIMESTAMP NOT NULL,
+    free_time TIME NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now(),
 

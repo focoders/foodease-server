@@ -10,7 +10,6 @@ BEGIN
 END;
 $$
 
-
 -- Down Migration
 
 DROP FUNCTION IF EXISTS update_timestamp();
