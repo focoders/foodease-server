@@ -41,7 +41,7 @@ export default class UserController {
     }
   }
 
-  static async loginCustomer( req: Request<ParamsDictionary, any, CustomerLoginSchema>,res: Response){
+  static async loginCustomer(req: Request<ParamsDictionary, any, CustomerLoginSchema>,res: Response){
     try {
       const customerReqLogin = await findCustomerByEmail.run({
         email: req.body.email

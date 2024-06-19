@@ -30,7 +30,7 @@ export function verifyAuthToken(req: Request, res: Response, next: NextFunction)
     } catch (error) {
         console.error(error)
         return res.status(401).json(
-            apiResponse(null, false, "Customer unauthorized")
+            apiResponse(null, false, "Unauthorized")
         )
     }
 }
