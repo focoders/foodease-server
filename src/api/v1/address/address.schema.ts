@@ -14,3 +14,17 @@ export type manageAddressUsingCustomerIdSchema= {
         data: string;
     }
 }
+
+export type updateCustomerAddressByIdSchema = { 
+    street: string;
+    payload: {
+        data: string;
+    }
+}
+
+export type setCustomerActiveAddressSchema = { 
+    active_address_id: string;
+    payload: {
+        data: string;
+    }
+}
