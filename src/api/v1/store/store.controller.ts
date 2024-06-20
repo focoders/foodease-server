@@ -30,16 +30,7 @@ export default class StoreController {
 
       const { street, village, sub_district, city, province } =
         req.body.address;
-      const fullStoreAddress =
-        street +
-        " " +
-        village +
-        " " +
-        sub_district +
-        " " +
-        city +
-        " " +
-        province;
+      const fullStoreAddress = street + ", " +  village + ", " + sub_district +  ", " + city + ", " + province;
       const geocodeApiResponse = await fetch(
         `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(
           fullStoreAddress
