@@ -121,7 +121,7 @@ export interface IUpdateCustomerAddressByIdParams {
   customer_id?: string | null | void;
   id?: string | null | void;
   latitude?: number | null | void;
-  longitude?: number | null | void;
+  longtitude?: number | null | void;
   street?: string | null | void;
 }
 
@@ -141,13 +141,13 @@ export interface IUpdateCustomerAddressByIdQuery {
   result: IUpdateCustomerAddressByIdResult;
 }
 
-const updateCustomerAddressByIdIR: any = {"usedParamSet":{"street":true,"longitude":true,"latitude":true,"id":true,"customer_id":true},"params":[{"name":"street","required":false,"transform":{"type":"scalar"},"locs":[{"a":28,"b":34}]},{"name":"longitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":64,"b":73}]},{"name":"latitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":76,"b":84}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":98,"b":100}]},{"name":"customer_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":120,"b":131}]}],"statement":"UPDATE address\nSET street = :street, coordinates = ST_MakePoint(:longitude, :latitude)\nWHERE id = :id AND customer_id = :customer_id\nRETURNING\n    id,\n    street,\n    ST_X(coordinates::geometry) as \"longtitude\",\n    ST_Y(coordinates::geometry) as \"latitude\",\n    created_at,\n    updated_at"};
+const updateCustomerAddressByIdIR: any = {"usedParamSet":{"street":true,"longtitude":true,"latitude":true,"id":true,"customer_id":true},"params":[{"name":"street","required":false,"transform":{"type":"scalar"},"locs":[{"a":28,"b":34}]},{"name":"longtitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":64,"b":74}]},{"name":"latitude","required":false,"transform":{"type":"scalar"},"locs":[{"a":77,"b":85}]},{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":99,"b":101}]},{"name":"customer_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":121,"b":132}]}],"statement":"UPDATE address\nSET street = :street, coordinates = ST_MakePoint(:longtitude, :latitude)\nWHERE id = :id AND customer_id = :customer_id\nRETURNING\n    id,\n    street,\n    ST_X(coordinates::geometry) as \"longtitude\",\n    ST_Y(coordinates::geometry) as \"latitude\",\n    created_at,\n    updated_at"};
 
 /**
  * Query generated from SQL:
  * ```
  * UPDATE address
- * SET street = :street, coordinates = ST_MakePoint(:longitude, :latitude)
+ * SET street = :street, coordinates = ST_MakePoint(:longtitude, :latitude)
  * WHERE id = :id AND customer_id = :customer_id
  * RETURNING
  *     id,
@@ -352,5 +352,64 @@ const getCustomerActiveCoordinatesIR: any = {"usedParamSet":{"customer_id":true}
  * ```
  */
 export const getCustomerActiveCoordinates = new PreparedQuery<IGetCustomerActiveCoordinatesParams,IGetCustomerActiveCoordinatesResult>(getCustomerActiveCoordinatesIR);
+
+
+/** 'GetCustomerByActiveAddressId' parameters type */
+export interface IGetCustomerByActiveAddressIdParams {
+  active_address_id?: string | null | void;
+}
+
+/** 'GetCustomerByActiveAddressId' return type */
+export interface IGetCustomerByActiveAddressIdResult {
+  coordinates: unknown;
+  created_at: Date;
+  customer_id: string | null;
+  id: string;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'GetCustomerByActiveAddressId' query type */
+export interface IGetCustomerByActiveAddressIdQuery {
+  params: IGetCustomerByActiveAddressIdParams;
+  result: IGetCustomerByActiveAddressIdResult;
+}
+
+const getCustomerByActiveAddressIdIR: any = {"usedParamSet":{"active_address_id":true},"params":[{"name":"active_address_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":112,"b":129}]}],"statement":"SELECT *\nFROM address\nWHERE id = (\n    SELECT active_address_id\n    FROM customer\n    WHERE active_address_id = :active_address_id\n)"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT *
+ * FROM address
+ * WHERE id = (
+ *     SELECT active_address_id
+ *     FROM customer
+ *     WHERE active_address_id = :active_address_id
+ * )
+ * ```
+ */
+export const getCustomerByActiveAddressId = new PreparedQuery<IGetCustomerByActiveAddressIdParams,IGetCustomerByActiveAddressIdResult>(getCustomerByActiveAddressIdIR);
+
+
+/** Query 'GetCoordinatesByAddressId' is invalid, so its result is assigned type 'never'.
+ *  */
+export type IGetCoordinatesByAddressIdResult = never;
+
+/** Query 'GetCoordinatesByAddressId' is invalid, so its parameters are assigned type 'never'.
+ *  */
+export type IGetCoordinatesByAddressIdParams = never;
+
+const getCoordinatesByAddressIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":51,"b":53}]}],"statement":"SELECT latitude, longitude\nFROM address\nWHERE id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT latitude, longitude
+ * FROM address
+ * WHERE id = :id
+ * ```
+ */
+export const getCoordinatesByAddressId = new PreparedQuery<IGetCoordinatesByAddressIdParams,IGetCoordinatesByAddressIdResult>(getCoordinatesByAddressIdIR);
 
 

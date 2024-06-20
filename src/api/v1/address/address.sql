@@ -37,7 +37,7 @@ RETURNING id;
     @name updateCustomerAddressById
 */
 UPDATE address
-SET street = :street, coordinates = ST_MakePoint(:longitude, :latitude)
+SET street = :street, coordinates = ST_MakePoint(:longtitude, :latitude)
 WHERE id = :id AND customer_id = :customer_id
 RETURNING
     id,
@@ -110,3 +110,21 @@ WHERE id = (
     WHERE id = :customer_id
     LIMIT 1
 );
+
+/* 
+    @name getCustomerByActiveAddressId
+*/
+SELECT *
+FROM address
+WHERE id = (
+    SELECT active_address_id
+    FROM customer
+    WHERE active_address_id = :active_address_id
+);
+
+/*
+    @name getCoordinatesByAddressId
+*/
+SELECT latitude, longitude
+FROM address
+WHERE id = :id;
