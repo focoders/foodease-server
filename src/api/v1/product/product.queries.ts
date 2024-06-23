@@ -43,3 +43,76 @@ const addNewProductIR: any = {"usedParamSet":{"product":true},"params":[{"name":
 export const addNewProduct = new PreparedQuery<IAddNewProductParams,IAddNewProductResult>(addNewProductIR);
 
 
+/** 'GetProductById' parameters type */
+export interface IGetProductByIdParams {
+  id?: string | null | void;
+}
+
+/** 'GetProductById' return type */
+export interface IGetProductByIdResult {
+  address_created_at: Date;
+  address_latitude: number | null;
+  address_longitude: number | null;
+  address_street: string;
+  address_updated_at: Date;
+  category_name: string;
+  category_slug: string;
+  created_at: Date;
+  description: string;
+  expired_time: Date;
+  id: string;
+  price_after: number;
+  price_before: number;
+  product_name: string;
+  production_time: Date;
+  stock: number;
+  store_created_at: Date;
+  store_id: string;
+  store_name: string;
+  store_updated_at: Date;
+  updated_at: Date;
+}
+
+/** 'GetProductById' query type */
+export interface IGetProductByIdQuery {
+  params: IGetProductByIdParams;
+  result: IGetProductByIdResult;
+}
+
+const getProductByIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":785,"b":787}]}],"statement":"SELECT \np.id,\n    p.product_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.production_time,\n    p.expired_time,\n    p.stock,\n    s.id as \"store_id\",\n    s.store_name as \"store_name\",\n    s.created_at as \"store_created_at\",\n    s.updated_at as \"store_updated_at\",\n    a.street as \"address_street\",\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    a.created_at as \"address_created_at\",\n    a.updated_at as \"address_updated_at\",\n    c.slug as \"category_slug\",\n    c.category_name as \"category_name\",\n    p.created_at,\n    p.updated_at\nFROM product p \nINNER JOIN store s ON p.store_id = s.id\nINNER JOIN category c ON p.category_id = c.id\nINNER JOIN address a ON s.address_id = a.id \nWHERE p.id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT 
+ * p.id,
+ *     p.product_name,
+ *     p.description,
+ *     p.price_before,
+ *     p.price_after,
+ *     p.production_time,
+ *     p.expired_time,
+ *     p.stock,
+ *     s.id as "store_id",
+ *     s.store_name as "store_name",
+ *     s.created_at as "store_created_at",
+ *     s.updated_at as "store_updated_at",
+ *     a.street as "address_street",
+ *     ST_X(a.coordinates::geometry) as "address_longitude",
+ *     ST_Y(a.coordinates::geometry) as "address_latitude",
+ *     a.created_at as "address_created_at",
+ *     a.updated_at as "address_updated_at",
+ *     c.slug as "category_slug",
+ *     c.category_name as "category_name",
+ *     p.created_at,
+ *     p.updated_at
+ * FROM product p 
+ * INNER JOIN store s ON p.store_id = s.id
+ * INNER JOIN category c ON p.category_id = c.id
+ * INNER JOIN address a ON s.address_id = a.id 
+ * WHERE p.id = :id
+ * ```
+ */
+export const getProductById = new PreparedQuery<IGetProductByIdParams,IGetProductByIdResult>(getProductByIdIR);
+
+
