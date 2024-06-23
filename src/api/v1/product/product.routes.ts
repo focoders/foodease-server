@@ -5,6 +5,8 @@ import ProductController from "./product.controller";
 
 const router = Router()
 
+router.get('/:product_id', verifyAuthToken, ProductController.getProductById)
+
 router.post('/create', verifyAuthToken, ProductController.addNewProduct)
 
 export default router
