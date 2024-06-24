@@ -37,3 +37,28 @@ INNER JOIN store s ON p.store_id = s.id
 INNER JOIN category c ON p.category_id = c.id
 INNER JOIN address a ON s.address_id = a.id 
 WHERE p.id = :id;
+
+
+/*
+    @name updateProductById
+*/
+UPDATE product
+SET 
+    product_name = :product_name,
+    description = :description,
+    price_before = :price_before,
+    price_after = :price_after,
+    production_time = :production_time,
+    expired_time = :expired_time,
+    category_id = :category_id,
+    image_id = :image_id
+WHERE id = :id AND store_id = :store_id
+RETURNING id;
+
+/*
+    @name updateStockProductById
+*/
+UPDATE product
+SET stock = :stock
+WHERE id = :id AND store_id = :store_id
+RETURNING id;
