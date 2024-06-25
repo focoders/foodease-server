@@ -6,8 +6,9 @@ const app = express();
 const port = 8080;
 
 app.use(cors({
-  origin: 'https://localhost:3000',
+  origin: ["https://localhost:3000", "https://foodease-web-client.vercel.app"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  optionsSuccessStatus: 200,
   }))
 app.use(express.json())
 app.use("/api", router)
