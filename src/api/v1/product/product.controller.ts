@@ -217,7 +217,6 @@ export default class ProductController {
 
 
             let nearestProductsResult
-            // console.log(req.query.product)
             if(req.query.product === undefined){
                 nearestProductsResult = await getNearestProduct.run({
                     user_coordinates: userCoordinates[0].coordinates,
@@ -247,16 +246,20 @@ export default class ProductController {
         }
     }
 
-    static async getPublicNearestProduct(req: Request<ParamsDictionary, any, manageProductById>, res: Response){
+    static async getPublicNearestProduct(req: Request, res: Response){
         try {
              
             const userCoordinates = await getCustomerActiveCoordinates.run({
-                customer_id: process.env.DEFAULT_ADDRESS_ID
+                customer_id: process.env.DEFAULT_ADDRESS_ID,
             }, pool)
 
+            if(!userCoordinates || userCoordinates.length === 0){
+                return res.status(400).json(
+                    apiResponse(null, false, "Customer not found")
+                )
+            }
 
             let nearestProductsResult
-            // console.log(req.query.product)
             if(req.query.product === undefined){
                 nearestProductsResult = await getNearestProduct.run({
                     user_coordinates: userCoordinates[0].coordinates,
