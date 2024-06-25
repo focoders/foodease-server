@@ -247,8 +247,8 @@ export default class ProductController {
     }
 
     static async getPublicNearestProduct(req: Request, res: Response){
-        try {
-             
+        
+        try { 
             const userCoordinates = await getCustomerActiveCoordinates.run({
                 customer_id: process.env.DEFAULT_ADDRESS_ID,
             }, pool)
