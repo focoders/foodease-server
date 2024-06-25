@@ -62,3 +62,92 @@ UPDATE product
 SET stock = :stock
 WHERE id = :id AND store_id = :store_id
 RETURNING id;
+
+/*
+    @name getAllProductByStoreId
+*/
+SELECT *
+FROM product
+WHERE store_id = :store_id;
+
+/*
+    @name getProductOwner
+*/
+
+SELECT store_id
+FROM product
+WHERE id = :id;
+
+/*
+    @name deleteProductById
+*/
+DELETE FROM product
+WHERE id = :id AND store_id = :store_id;
+
+/*
+    @name getNearestProduct
+*/
+SELECT
+    p.product_name,
+    p.description,
+    p.price_before,
+    p.price_after,
+    p.production_time,
+    p.expired_time,
+    p.stock,
+    p.image_id,
+    s.store_name,
+    a.street,
+    ST_X(a.coordinates::geometry) as "address_longitude",
+    ST_Y(a.coordinates::geometry) as "address_latitude",
+    ST_DISTANCE(a.coordinates, :user_coordinates) as "address_distance",
+    c.slug,
+    c.category_name,
+    p.updated_at,
+    p.created_at
+FROM product p 
+INNER JOIN store s ON p.store_id = s.id
+INNER JOIN address a ON a.id = s.address_id
+INNER JOIN category c ON c.id = p.category_id
+WHERE 
+    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance
+ORDER BY
+    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,
+    p.id ASC,
+    p.updated_at DESC
+LIMIT :limit OFFSET :offset;
+
+/*
+    @name getNearestProductWithQuery
+*/
+SELECT
+    p.product_name,
+    p.description,
+    p.price_before,
+    p.price_after,
+    p.production_time,
+    p.expired_time,
+    p.stock,
+    p.image_id,
+    s.store_name,
+    a.street,
+    ST_X(a.coordinates::geometry) as "address_longitude",
+    ST_Y(a.coordinates::geometry) as "address_latitude",
+    ST_DISTANCE(a.coordinates, :user_coordinates) as "address_distance",
+    c.slug,
+    c.category_name,
+    p.updated_at,
+    p.created_at
+FROM product p 
+INNER JOIN store s ON p.store_id = s.id
+INNER JOIN address a ON a.id = s.address_id
+INNER JOIN category c ON c.id = p.category_id
+WHERE 
+    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance
+    AND to_tsvector('simple', p.product_name) @@ plainto_tsquery('simple', :product)
+ORDER BY
+    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,
+    p.product_name ASC,
+    p.updated_at DESC,
+    p.id ASC
+LIMIT :limit OFFSET :offset;

@@ -3,6 +3,8 @@ import { PreparedQuery } from '@pgtyped/runtime';
 
 export type DateOrString = Date | string;
 
+export type NumberOrString = number | string;
+
 /** 'AddNewProduct' parameters type */
 export interface IAddNewProductParams {
   product: {
@@ -193,5 +195,253 @@ const updateStockProductByIdIR: any = {"usedParamSet":{"stock":true,"id":true,"s
  * ```
  */
 export const updateStockProductById = new PreparedQuery<IUpdateStockProductByIdParams,IUpdateStockProductByIdResult>(updateStockProductByIdIR);
+
+
+/** 'GetAllProductByStoreId' parameters type */
+export interface IGetAllProductByStoreIdParams {
+  store_id?: string | null | void;
+}
+
+/** 'GetAllProductByStoreId' return type */
+export interface IGetAllProductByStoreIdResult {
+  category_id: string;
+  created_at: Date;
+  description: string;
+  expired_time: Date;
+  id: string;
+  image_id: string | null;
+  price_after: number;
+  price_before: number;
+  product_name: string;
+  production_time: Date;
+  stock: number;
+  store_id: string;
+  updated_at: Date;
+}
+
+/** 'GetAllProductByStoreId' query type */
+export interface IGetAllProductByStoreIdQuery {
+  params: IGetAllProductByStoreIdParams;
+  result: IGetAllProductByStoreIdResult;
+}
+
+const getAllProductByStoreIdIR: any = {"usedParamSet":{"store_id":true},"params":[{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":39,"b":47}]}],"statement":"SELECT *\nFROM product\nWHERE store_id = :store_id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT *
+ * FROM product
+ * WHERE store_id = :store_id
+ * ```
+ */
+export const getAllProductByStoreId = new PreparedQuery<IGetAllProductByStoreIdParams,IGetAllProductByStoreIdResult>(getAllProductByStoreIdIR);
+
+
+/** 'GetProductOwner' parameters type */
+export interface IGetProductOwnerParams {
+  id?: string | null | void;
+}
+
+/** 'GetProductOwner' return type */
+export interface IGetProductOwnerResult {
+  store_id: string;
+}
+
+/** 'GetProductOwner' query type */
+export interface IGetProductOwnerQuery {
+  params: IGetProductOwnerParams;
+  result: IGetProductOwnerResult;
+}
+
+const getProductOwnerIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":40,"b":42}]}],"statement":"SELECT store_id\nFROM product\nWHERE id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT store_id
+ * FROM product
+ * WHERE id = :id
+ * ```
+ */
+export const getProductOwner = new PreparedQuery<IGetProductOwnerParams,IGetProductOwnerResult>(getProductOwnerIR);
+
+
+/** 'DeleteProductById' parameters type */
+export interface IDeleteProductByIdParams {
+  id?: string | null | void;
+  store_id?: string | null | void;
+}
+
+/** 'DeleteProductById' return type */
+export type IDeleteProductByIdResult = void;
+
+/** 'DeleteProductById' query type */
+export interface IDeleteProductByIdQuery {
+  params: IDeleteProductByIdParams;
+  result: IDeleteProductByIdResult;
+}
+
+const deleteProductByIdIR: any = {"usedParamSet":{"id":true,"store_id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":31,"b":33}]},{"name":"store_id","required":false,"transform":{"type":"scalar"},"locs":[{"a":50,"b":58}]}],"statement":"DELETE FROM product\nWHERE id = :id AND store_id = :store_id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * DELETE FROM product
+ * WHERE id = :id AND store_id = :store_id
+ * ```
+ */
+export const deleteProductById = new PreparedQuery<IDeleteProductByIdParams,IDeleteProductByIdResult>(deleteProductByIdIR);
+
+
+/** 'GetNearestProduct' parameters type */
+export interface IGetNearestProductParams {
+  limit?: NumberOrString | null | void;
+  max_distance?: number | null | void;
+  offset?: NumberOrString | null | void;
+  user_coordinates?: unknown | null | void;
+}
+
+/** 'GetNearestProduct' return type */
+export interface IGetNearestProductResult {
+  address_distance: number | null;
+  address_latitude: number | null;
+  address_longitude: number | null;
+  category_name: string;
+  created_at: Date;
+  description: string;
+  expired_time: Date;
+  image_id: string | null;
+  price_after: number;
+  price_before: number;
+  product_name: string;
+  production_time: Date;
+  slug: string;
+  stock: number;
+  store_name: string;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'GetNearestProduct' query type */
+export interface IGetNearestProductQuery {
+  params: IGetNearestProductParams;
+  result: IGetNearestProductResult;
+}
+
+const getNearestProductIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":335,"b":351},{"a":629,"b":645},{"a":704,"b":720}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":650,"b":662}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":770,"b":775}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":784,"b":790}]}],"statement":"SELECT\n    p.product_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.production_time,\n    p.expired_time,\n    p.stock,\n    p.image_id,\n    s.store_name,\n    a.street,\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    c.slug,\n    c.category_name,\n    p.updated_at,\n    p.created_at\nFROM product p \nINNER JOIN store s ON p.store_id = s.id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE \n    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\nORDER BY\n    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,\n    p.id ASC,\n    p.updated_at DESC\nLIMIT :limit OFFSET :offset"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     p.product_name,
+ *     p.description,
+ *     p.price_before,
+ *     p.price_after,
+ *     p.production_time,
+ *     p.expired_time,
+ *     p.stock,
+ *     p.image_id,
+ *     s.store_name,
+ *     a.street,
+ *     ST_X(a.coordinates::geometry) as "address_longitude",
+ *     ST_Y(a.coordinates::geometry) as "address_latitude",
+ *     ST_DISTANCE(a.coordinates, :user_coordinates) as "address_distance",
+ *     c.slug,
+ *     c.category_name,
+ *     p.updated_at,
+ *     p.created_at
+ * FROM product p 
+ * INNER JOIN store s ON p.store_id = s.id
+ * INNER JOIN address a ON a.id = s.address_id
+ * INNER JOIN category c ON c.id = p.category_id
+ * WHERE 
+ *     ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance
+ * ORDER BY
+ *     ST_DISTANCE(a.coordinates, :user_coordinates) ASC,
+ *     p.id ASC,
+ *     p.updated_at DESC
+ * LIMIT :limit OFFSET :offset
+ * ```
+ */
+export const getNearestProduct = new PreparedQuery<IGetNearestProductParams,IGetNearestProductResult>(getNearestProductIR);
+
+
+/** 'GetNearestProductWithQuery' parameters type */
+export interface IGetNearestProductWithQueryParams {
+  limit?: NumberOrString | null | void;
+  max_distance?: number | null | void;
+  offset?: NumberOrString | null | void;
+  product?: string | null | void;
+  user_coordinates?: unknown | null | void;
+}
+
+/** 'GetNearestProductWithQuery' return type */
+export interface IGetNearestProductWithQueryResult {
+  address_distance: number | null;
+  address_latitude: number | null;
+  address_longitude: number | null;
+  category_name: string;
+  created_at: Date;
+  description: string;
+  expired_time: Date;
+  image_id: string | null;
+  price_after: number;
+  price_before: number;
+  product_name: string;
+  production_time: Date;
+  slug: string;
+  stock: number;
+  store_name: string;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'GetNearestProductWithQuery' query type */
+export interface IGetNearestProductWithQueryQuery {
+  params: IGetNearestProductWithQueryParams;
+  result: IGetNearestProductWithQueryResult;
+}
+
+const getNearestProductWithQueryIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"product":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":335,"b":351},{"a":629,"b":645},{"a":789,"b":805}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":650,"b":662}]},{"name":"product","required":false,"transform":{"type":"scalar"},"locs":[{"a":739,"b":746}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":879,"b":884}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":893,"b":899}]}],"statement":"SELECT\n    p.product_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.production_time,\n    p.expired_time,\n    p.stock,\n    p.image_id,\n    s.store_name,\n    a.street,\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    c.slug,\n    c.category_name,\n    p.updated_at,\n    p.created_at\nFROM product p \nINNER JOIN store s ON p.store_id = s.id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE \n    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\n    AND to_tsvector('simple', p.product_name) @@ plainto_tsquery('simple', :product)\nORDER BY\n    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,\n    p.product_name ASC,\n    p.updated_at DESC,\n    p.id ASC\nLIMIT :limit OFFSET :offset"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     p.product_name,
+ *     p.description,
+ *     p.price_before,
+ *     p.price_after,
+ *     p.production_time,
+ *     p.expired_time,
+ *     p.stock,
+ *     p.image_id,
+ *     s.store_name,
+ *     a.street,
+ *     ST_X(a.coordinates::geometry) as "address_longitude",
+ *     ST_Y(a.coordinates::geometry) as "address_latitude",
+ *     ST_DISTANCE(a.coordinates, :user_coordinates) as "address_distance",
+ *     c.slug,
+ *     c.category_name,
+ *     p.updated_at,
+ *     p.created_at
+ * FROM product p 
+ * INNER JOIN store s ON p.store_id = s.id
+ * INNER JOIN address a ON a.id = s.address_id
+ * INNER JOIN category c ON c.id = p.category_id
+ * WHERE 
+ *     ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance
+ *     AND to_tsvector('simple', p.product_name) @@ plainto_tsquery('simple', :product)
+ * ORDER BY
+ *     ST_DISTANCE(a.coordinates, :user_coordinates) ASC,
+ *     p.product_name ASC,
+ *     p.updated_at DESC,
+ *     p.id ASC
+ * LIMIT :limit OFFSET :offset
+ * ```
+ */
+export const getNearestProductWithQuery = new PreparedQuery<IGetNearestProductWithQueryParams,IGetNearestProductWithQueryResult>(getNearestProductWithQueryIR);
 
 
