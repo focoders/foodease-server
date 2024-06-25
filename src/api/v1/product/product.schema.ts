@@ -21,6 +21,13 @@ export type manageProductById = {
   };
 };
 
+export type updateProductStockSchema = {
+  stock: number;
+  payload: {
+    data: string;
+  }
+}
+
 export function convertToGetProductById(product: IGetProductByIdResult) {
   return {
     product_id: product.id,
