@@ -5,8 +5,12 @@ import ProductController from "./product.controller";
 
 const router = Router()
 
+router.get('/', verifyAuthToken, ProductController.getNearestProduct)
+router.get('/public', verifyAuthToken, ProductController.getPublicNearestProduct)
 router.get('/:product_id', verifyAuthToken, ProductController.getProductById)
-
+router.put('/:product_id', verifyAuthToken, ProductController.updateProductDetails)
+router.put('/:product_id/stock', verifyAuthToken, ProductController.updateProductStock)
 router.post('/create', verifyAuthToken, ProductController.addNewProduct)
+router.delete('/:product_id', verifyAuthToken, ProductController.deleteProductById)
 
 export default router
