@@ -2,7 +2,7 @@ import { apiResponse } from "@/utils/response";
 import { Request, Response } from "express";
 import { ParamsDictionary } from  "express-serve-static-core"
 import { AddNewProductSchema, convertToGetProductById, manageProductById, updateProductStockSchema } from "./product.schema";
-import { addNewProduct, deleteProductById, getNearestProduct, getNearestProductWithQuery, getProductById, getProductOwner, IAddNewProductResult, updateProductById, updateStockProductById } from "./product.queries";
+import { addNewProduct, deleteProductById, getAllProductByStoreId, getNearestProduct, getNearestProductWithQuery, getProductById, getProductOwner, IAddNewProductResult, updateProductById, updateStockProductById } from "./product.queries";
 import pool from "@/database/pool";
 import { getCategoryIdBySlug } from "../category/category.queries";
 import { getCustomerActiveCoordinates } from "../address/address.queries";
@@ -288,5 +288,22 @@ export default class ProductController {
             )
         }
     }
+
+    static async getProductByStore (req: Request, res: Response){
+
+        try {
+          const products = await getAllProductByStoreId.run({store_id: req.body.payload.sub}, pool)
+    
+          return res.status(200).json(
+            apiResponse(products, true, "Product fetched successfully")
+          )
+        } catch (error) {
+          console.error(error);
+          return res.status(500).json(
+            apiResponse(null, false, "Internal server error")
+          ) 
+        }
+    }
+    
 
 }

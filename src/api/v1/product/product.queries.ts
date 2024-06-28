@@ -449,3 +449,68 @@ const getNearestProductWithQueryIR: any = {"usedParamSet":{"user_coordinates":tr
 export const getNearestProductWithQuery = new PreparedQuery<IGetNearestProductWithQueryParams,IGetNearestProductWithQueryResult>(getNearestProductWithQueryIR);
 
 
+/** 'GetProductByStoreId' parameters type */
+export interface IGetProductByStoreIdParams {
+  id?: string | null | void;
+}
+
+/** 'GetProductByStoreId' return type */
+export interface IGetProductByStoreIdResult {
+  address_latitude: number | null;
+  address_longitude: number | null;
+  category_name: string;
+  created_at: Date;
+  description: string;
+  expired_time: Date;
+  id: string;
+  image_id: string | null;
+  price_after: number;
+  price_before: number;
+  product_name: string;
+  production_time: Date;
+  slug: string;
+  stock: number;
+  store_name: string;
+  street: string;
+  updated_at: Date;
+}
+
+/** 'GetProductByStoreId' query type */
+export interface IGetProductByStoreIdQuery {
+  params: IGetProductByStoreIdParams;
+  result: IGetProductByStoreIdResult;
+}
+
+const getProductByStoreIdIR: any = {"usedParamSet":{"id":true},"params":[{"name":"id","required":false,"transform":{"type":"scalar"},"locs":[{"a":540,"b":542}]}],"statement":"SELECT\n    p.id,\n    p.product_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.production_time,\n    p.expired_time,\n    p.stock,\n    p.image_id,\n    s.store_name,\n    a.street,\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    c.slug,\n    c.category_name,\n    p.updated_at,\n    p.created_at\nFROM product p\nINNER JOIN store s ON s.id = p.store_id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE s.id = :id"};
+
+/**
+ * Query generated from SQL:
+ * ```
+ * SELECT
+ *     p.id,
+ *     p.product_name,
+ *     p.description,
+ *     p.price_before,
+ *     p.price_after,
+ *     p.production_time,
+ *     p.expired_time,
+ *     p.stock,
+ *     p.image_id,
+ *     s.store_name,
+ *     a.street,
+ *     ST_X(a.coordinates::geometry) as "address_longitude",
+ *     ST_Y(a.coordinates::geometry) as "address_latitude",
+ *     c.slug,
+ *     c.category_name,
+ *     p.updated_at,
+ *     p.created_at
+ * FROM product p
+ * INNER JOIN store s ON s.id = p.store_id
+ * INNER JOIN address a ON a.id = s.address_id
+ * INNER JOIN category c ON c.id = p.category_id
+ * WHERE s.id = :id
+ * ```
+ */
+export const getProductByStoreId = new PreparedQuery<IGetProductByStoreIdParams,IGetProductByStoreIdResult>(getProductByStoreIdIR);
+
+

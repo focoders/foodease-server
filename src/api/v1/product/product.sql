@@ -153,3 +153,28 @@ ORDER BY
     p.updated_at DESC,
     p.id ASC
 LIMIT :limit OFFSET :offset;
+
+/* @name GetProductByStoreID */
+SELECT
+    p.id,
+    p.product_name,
+    p.description,
+    p.price_before,
+    p.price_after,
+    p.production_time,
+    p.expired_time,
+    p.stock,
+    p.image_id,
+    s.store_name,
+    a.street,
+    ST_X(a.coordinates::geometry) as "address_longitude",
+    ST_Y(a.coordinates::geometry) as "address_latitude",
+    c.slug,
+    c.category_name,
+    p.updated_at,
+    p.created_at
+FROM product p
+INNER JOIN store s ON s.id = p.store_id
+INNER JOIN address a ON a.id = s.address_id
+INNER JOIN category c ON c.id = p.category_id
+WHERE s.id = :id;
