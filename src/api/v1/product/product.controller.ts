@@ -2,7 +2,7 @@ import { apiResponse } from "@/utils/response";
 import { Request, Response } from "express";
 import { ParamsDictionary } from  "express-serve-static-core"
 import { AddNewProductSchema, convertToGetProductById, manageProductById, updateProductStockSchema } from "./product.schema";
-import { addNewProduct, deleteProductById, getAllProductByStoreId, getNearestProduct, getNearestProductWithQuery, getProductById, getProductOwner, IAddNewProductResult, updateProductById, updateStockProductById } from "./product.queries";
+import { addNewProduct, deleteProductById, getAllProductByStoreId, getNearestProduct, getNearestProductWithQuery, getProductById, getProductByStoreId, getProductOwner, IAddNewProductResult, updateProductById, updateStockProductById } from "./product.queries";
 import pool from "@/database/pool";
 import { getCategoryIdBySlug } from "../category/category.queries";
 import { getCustomerActiveCoordinates } from "../address/address.queries";
@@ -289,11 +289,10 @@ export default class ProductController {
         }
     }
 
-    static async getProductByStore (req: Request, res: Response){
+    static async getProductByStore (req: Request<ParamsDictionary, any, manageProductById>, res: Response){
 
         try {
-          const products = await getAllProductByStoreId.run({store_id: req.body.payload.sub}, pool)
-    
+          const products = await getProductByStoreId.run({id: req.body.payload.data}, pool)
           return res.status(200).json(
             apiResponse(products, true, "Product fetched successfully")
           )
