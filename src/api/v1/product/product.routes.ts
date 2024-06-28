@@ -7,6 +7,7 @@ const router = Router()
 
 router.get('/', verifyAuthToken, ProductController.getNearestProduct)
 router.get('/public', ProductController.getPublicNearestProduct)
+router.get('/store-products', verifyAuthToken, ProductController.getProductByStore)
 router.get('/:product_id', verifyAuthToken, ProductController.getProductById)
 router.put('/:product_id', verifyAuthToken, ProductController.updateProductDetails)
 router.put('/:product_id/stock', verifyAuthToken, ProductController.updateProductStock)
