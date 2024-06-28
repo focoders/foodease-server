@@ -311,6 +311,7 @@ export interface IGetNearestProductResult {
   created_at: Date;
   description: string;
   expired_time: Date;
+  id: string;
   image_id: string | null;
   price_after: number;
   price_before: number;
@@ -329,12 +330,13 @@ export interface IGetNearestProductQuery {
   result: IGetNearestProductResult;
 }
 
-const getNearestProductIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":335,"b":351},{"a":629,"b":645},{"a":704,"b":720}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":650,"b":662}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":770,"b":775}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":784,"b":790}]}],"statement":"SELECT\n    p.product_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.production_time,\n    p.expired_time,\n    p.stock,\n    p.image_id,\n    s.store_name,\n    a.street,\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    c.slug,\n    c.category_name,\n    p.updated_at,\n    p.created_at\nFROM product p \nINNER JOIN store s ON p.store_id = s.id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE \n    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\nORDER BY\n    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,\n    p.id ASC,\n    p.updated_at DESC\nLIMIT :limit OFFSET :offset"};
+const getNearestProductIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":345,"b":361},{"a":639,"b":655},{"a":714,"b":730}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":660,"b":672}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":780,"b":785}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":794,"b":800}]}],"statement":"SELECT\n    p.id,\n    p.product_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.production_time,\n    p.expired_time,\n    p.stock,\n    p.image_id,\n    s.store_name,\n    a.street,\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    c.slug,\n    c.category_name,\n    p.updated_at,\n    p.created_at\nFROM product p \nINNER JOIN store s ON p.store_id = s.id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE \n    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\nORDER BY\n    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,\n    p.id ASC,\n    p.updated_at DESC\nLIMIT :limit OFFSET :offset"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT
+ *     p.id,
  *     p.product_name,
  *     p.description,
  *     p.price_before,
@@ -386,6 +388,7 @@ export interface IGetNearestProductWithQueryResult {
   created_at: Date;
   description: string;
   expired_time: Date;
+  id: string;
   image_id: string | null;
   price_after: number;
   price_before: number;
@@ -404,12 +407,13 @@ export interface IGetNearestProductWithQueryQuery {
   result: IGetNearestProductWithQueryResult;
 }
 
-const getNearestProductWithQueryIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"product":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":335,"b":351},{"a":629,"b":645},{"a":789,"b":805}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":650,"b":662}]},{"name":"product","required":false,"transform":{"type":"scalar"},"locs":[{"a":739,"b":746}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":879,"b":884}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":893,"b":899}]}],"statement":"SELECT\n    p.product_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.production_time,\n    p.expired_time,\n    p.stock,\n    p.image_id,\n    s.store_name,\n    a.street,\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    c.slug,\n    c.category_name,\n    p.updated_at,\n    p.created_at\nFROM product p \nINNER JOIN store s ON p.store_id = s.id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE \n    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\n    AND to_tsvector('simple', p.product_name) @@ plainto_tsquery('simple', :product)\nORDER BY\n    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,\n    p.product_name ASC,\n    p.updated_at DESC,\n    p.id ASC\nLIMIT :limit OFFSET :offset"};
+const getNearestProductWithQueryIR: any = {"usedParamSet":{"user_coordinates":true,"max_distance":true,"product":true,"limit":true,"offset":true},"params":[{"name":"user_coordinates","required":false,"transform":{"type":"scalar"},"locs":[{"a":345,"b":361},{"a":639,"b":655},{"a":799,"b":815}]},{"name":"max_distance","required":false,"transform":{"type":"scalar"},"locs":[{"a":660,"b":672}]},{"name":"product","required":false,"transform":{"type":"scalar"},"locs":[{"a":749,"b":756}]},{"name":"limit","required":false,"transform":{"type":"scalar"},"locs":[{"a":889,"b":894}]},{"name":"offset","required":false,"transform":{"type":"scalar"},"locs":[{"a":903,"b":909}]}],"statement":"SELECT\n    p.id,\n    p.product_name,\n    p.description,\n    p.price_before,\n    p.price_after,\n    p.production_time,\n    p.expired_time,\n    p.stock,\n    p.image_id,\n    s.store_name,\n    a.street,\n    ST_X(a.coordinates::geometry) as \"address_longitude\",\n    ST_Y(a.coordinates::geometry) as \"address_latitude\",\n    ST_DISTANCE(a.coordinates, :user_coordinates) as \"address_distance\",\n    c.slug,\n    c.category_name,\n    p.updated_at,\n    p.created_at\nFROM product p \nINNER JOIN store s ON p.store_id = s.id\nINNER JOIN address a ON a.id = s.address_id\nINNER JOIN category c ON c.id = p.category_id\nWHERE \n    ST_DISTANCE(a.coordinates, :user_coordinates) < :max_distance\n    AND to_tsvector('simple', p.product_name) @@ plainto_tsquery('simple', :product)\nORDER BY\n    ST_DISTANCE(a.coordinates, :user_coordinates) ASC,\n    p.product_name ASC,\n    p.updated_at DESC,\n    p.id ASC\nLIMIT :limit OFFSET :offset"};
 
 /**
  * Query generated from SQL:
  * ```
  * SELECT
+ *     p.id,
  *     p.product_name,
  *     p.description,
  *     p.price_before,

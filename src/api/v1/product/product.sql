@@ -88,6 +88,7 @@ WHERE id = :id AND store_id = :store_id;
     @name getNearestProduct
 */
 SELECT
+    p.id,
     p.product_name,
     p.description,
     p.price_before,
@@ -121,6 +122,7 @@ LIMIT :limit OFFSET :offset;
     @name getNearestProductWithQuery
 */
 SELECT
+    p.id,
     p.product_name,
     p.description,
     p.price_before,
